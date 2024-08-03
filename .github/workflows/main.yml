@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - main
-
   pull_request:
+  schedule:
+    - cron: '0 4 * * *'
 
 jobs:
   build:
@@ -14,7 +15,10 @@ jobs:
     strategy:
       matrix:
         ruby:
-          - '3.3.4'
+          - ruby-head
+          - '3.3'
+          - '3.2'
+          - '3.1'
 
     steps:
     - uses: actions/checkout@v4
@@ -23,5 +27,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
+      continue-on-error: ${{ (matrix.ruby_version == 'ruby-head')}}
     - name: Run the default task
       run: bundle exec rake
+      continue-on-error: ${{ (matrix.ruby_version == 'ruby-head')}}
