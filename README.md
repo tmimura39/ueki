@@ -37,7 +37,7 @@ class BookStoreClient
 
   private
 
-  def default_headers
+  def _default_headers
     h = super
     h['X-Request-Id'] = Current.request_id if Current.request_id.present?
     h
