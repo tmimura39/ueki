@@ -23,7 +23,7 @@ Simply include the Module created by Ueki in your own HTTP Client Library.
 
 ```ruby
 class BookStoreClient
-  include Ueki::HttpClient.new('http://example.com')
+  include Ueki::HttpClient.new('https://example.com')
 
   # Class Method
   def self.delete_book(id)
@@ -116,7 +116,7 @@ A. You can use [net_http_persistent](https://github.com/lostisland/faraday-net_h
 See [lib/ueki/http_client/default_requester.rb](https://github.com/tmimura39/ueki/blob/main/lib/ueki/http_client/default_requester.rb) for details.
 ```ruby
 class BookStoreClient
-  include Ueki::HttpClient.new('http://example.com')
+  include Ueki::HttpClient.new('https://example.com')
 
   private
 
@@ -139,7 +139,7 @@ In this case, you can use "automatic exception class definition" and "exception 
 
 ```ruby
 class BookStoreClient
-  include Ueki::HttpClient.new('http://example.com', requester: CustomRequester)
+  include Ueki::HttpClient.new('https://example.com', requester: CustomRequester)
 end
 ```
 

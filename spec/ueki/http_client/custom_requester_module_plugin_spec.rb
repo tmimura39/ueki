@@ -9,7 +9,7 @@ RSpec.describe "CustomRequester Moddule Plugin" do
       allow(klass).to receive(:name).and_return("DummyClient")
     end
   end
-  let!(:endpoint) { "http://example.com" }
+  let!(:endpoint) { "https://example.com" }
 
   it "CustomRequester is applied" do
     dummy_client_class.get("/abc", params: { message: "test" })

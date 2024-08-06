@@ -18,10 +18,10 @@ RSpec.describe "Requester Method Overriding" do
 
     klass
   end
-  let!(:endpoint) { "http://example.com" }
+  let!(:endpoint) { "https://example.com" }
 
   it "overridingRequesterMethod is applied" do
-    stub = stub_request(:get, "http://example.com/users")
+    stub = stub_request(:get, "https://example.com/users")
            .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
 
     dummy_client = dummy_client_class.new

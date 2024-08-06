@@ -8,7 +8,7 @@ RSpec.describe Ueki::HttpClient do
       allow(klass).to receive(:name).and_return("DummyClient")
     end
   end
-  let!(:endpoint) { "http://example.com" }
+  let!(:endpoint) { "https://example.com" }
 
   it "ENDPOINT to be defined" do
     expect(dummy_client_class::ENDPOINT).to eq endpoint
@@ -68,7 +68,7 @@ RSpec.describe Ueki::HttpClient do
   describe "RequesterShorthand" do
     describe ".get" do
       it "can do http request" do
-        stub = stub_request(:get, "http://example.com/users")
+        stub = stub_request(:get, "https://example.com/users")
                .with(query: { page: 10, per: 1 })
                .with(headers: { "User-Agent" => "DummyClient" })
                .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
@@ -81,7 +81,7 @@ RSpec.describe Ueki::HttpClient do
 
     describe ".post" do
       it "can do http request" do
-        stub = stub_request(:post, "http://example.com/users")
+        stub = stub_request(:post, "https://example.com/users")
                .with(body: { name: "tarou" })
                .with(headers: { "User-Agent" => "DummyClient" })
                .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
@@ -94,7 +94,7 @@ RSpec.describe Ueki::HttpClient do
 
     describe ".put" do
       it "can do http request" do
-        stub = stub_request(:put, "http://example.com/users")
+        stub = stub_request(:put, "https://example.com/users")
                .with(body: { name: "tarou" })
                .with(headers: { "User-Agent" => "DummyClient" })
                .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
@@ -107,7 +107,7 @@ RSpec.describe Ueki::HttpClient do
 
     describe ".patch" do
       it "can do http request" do
-        stub = stub_request(:patch, "http://example.com/users")
+        stub = stub_request(:patch, "https://example.com/users")
                .with(body: { name: "tarou" })
                .with(headers: { "User-Agent" => "DummyClient" })
                .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
@@ -120,7 +120,7 @@ RSpec.describe Ueki::HttpClient do
 
     describe ".delete" do
       it "can do http request" do
-        stub = stub_request(:delete, "http://example.com/users")
+        stub = stub_request(:delete, "https://example.com/users")
                .with(query: { page: 10, per: 1 })
                .with(headers: { "User-Agent" => "DummyClient" })
                .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
@@ -136,7 +136,7 @@ RSpec.describe Ueki::HttpClient do
     describe "#get" do
       describe "RequestParameter" do
         it "reflected in the query string" do
-          stub = stub_request(:get, "http://example.com/users")
+          stub = stub_request(:get, "https://example.com/users")
                  .with(query: { page: 10, per: 1 })
                  .to_return(status: 200)
 
@@ -148,7 +148,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestHeader" do
         describe "User-Agent" do
           it "Class name to be set (default)" do
-            stub = stub_request(:get, "http://example.com/users")
+            stub = stub_request(:get, "https://example.com/users")
                    .with(headers: { "User-Agent" => "DummyClient" })
 
             dummy_client_class.new.get("/users")
@@ -160,7 +160,7 @@ RSpec.describe Ueki::HttpClient do
       describe "ResponseBody" do
         context "with ResponseBody" do
           it "parsed ResponseBody to be returned" do
-            stub = stub_request(:get, "http://example.com/users")
+            stub = stub_request(:get, "https://example.com/users")
                    .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
 
             response = dummy_client_class.new.get("/users")
@@ -171,7 +171,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "without ResponseBody" do
           it "nil to be returned" do
-            stub = stub_request(:get, "http://example.com/users")
+            stub = stub_request(:get, "https://example.com/users")
                    .to_return(status: 204)
 
             response = dummy_client_class.new.get("/users")
@@ -184,7 +184,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestError" do
         context "when timeout" do
           it "raise TimeoutError" do
-            stub = stub_request(:get, "http://example.com/users")
+            stub = stub_request(:get, "https://example.com/users")
                    .to_raise(Faraday::TimeoutError)
 
             expect { dummy_client_class.new.get("/users") }
@@ -195,7 +195,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "when unexpected request error" do
           it "raise UnexpectedError" do
-            stub = stub_request(:get, "http://example.com/users")
+            stub = stub_request(:get, "https://example.com/users")
                    .to_raise
 
             expect { dummy_client_class.new.get("/users") }
@@ -209,7 +209,7 @@ RSpec.describe Ueki::HttpClient do
         describe "ResponseBody" do
           context "with ResponseBody" do
             it "raise exception object with parsed response" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 400, body: { message: "Bad Request" }.to_json)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -222,7 +222,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without ResponseBody" do
             it "raise exception object with nil body" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 400)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -237,7 +237,7 @@ RSpec.describe Ueki::HttpClient do
         describe "exception dispatch" do
           context "when 400" do
             it "raise BadRequestError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 400)
 
               expect { dummy_client_class.new.get("/users") }
@@ -248,7 +248,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 401" do
             it "raise UnauthorizedError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 401)
 
               expect { dummy_client_class.new.get("/users") }
@@ -259,7 +259,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 403" do
             it "raise ForbiddenError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 403)
 
               expect { dummy_client_class.new.get("/users") }
@@ -270,7 +270,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 404" do
             it "raise NotFoundError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 404)
 
               expect { dummy_client_class.new.get("/users") }
@@ -281,7 +281,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 408" do
             it "raise RequestTimeoutError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 408)
 
               expect { dummy_client_class.new.get("/users") }
@@ -292,7 +292,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 409" do
             it "raise ConflictError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 409)
 
               expect { dummy_client_class.new.get("/users") }
@@ -303,7 +303,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 422" do
             it "raise UnprocessableEntityError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 422)
 
               expect { dummy_client_class.new.get("/users") }
@@ -314,7 +314,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 429" do
             it "raise TooManyRequestsError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 429)
 
               expect { dummy_client_class.new.get("/users") }
@@ -325,7 +325,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 500" do
             it "raise ServerError" do
-              stub = stub_request(:get, "http://example.com/users")
+              stub = stub_request(:get, "https://example.com/users")
                      .to_return(status: 500)
 
               expect { dummy_client_class.new.get("/users") }
@@ -340,7 +340,7 @@ RSpec.describe Ueki::HttpClient do
     describe "#post" do
       describe "RequestParameter" do
         it "reflected in the request body" do
-          stub = stub_request(:post, "http://example.com/users")
+          stub = stub_request(:post, "https://example.com/users")
                  .with(body: { name: "tarou" })
                  .to_return(status: 200)
 
@@ -352,7 +352,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestHeader" do
         describe "User-Agent" do
           it "Class name to be set (default)" do
-            stub = stub_request(:post, "http://example.com/users")
+            stub = stub_request(:post, "https://example.com/users")
                    .with(headers: { "User-Agent" => "DummyClient" })
 
             dummy_client_class.new.post("/users")
@@ -363,7 +363,7 @@ RSpec.describe Ueki::HttpClient do
         describe "Content-Type" do
           context "with RequestBody" do
             it "application/json to be set (default)" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
 
               dummy_client_class.new.post("/users", params: { name: "tarou" })
@@ -373,7 +373,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without RequestBody" do
             it "application/json not to be set (default)" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .with(headers: { "User-Agent" => "DummyClient" })
 
               dummy_client_class.new.post("/users")
@@ -386,7 +386,7 @@ RSpec.describe Ueki::HttpClient do
       describe "ResponseBody" do
         context "with ResponseBody" do
           it "parsed ResponseBody to be returned" do
-            stub = stub_request(:post, "http://example.com/users")
+            stub = stub_request(:post, "https://example.com/users")
                    .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
 
             response = dummy_client_class.new.post("/users")
@@ -397,7 +397,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "without ResponseBody" do
           it "nil to be returned" do
-            stub = stub_request(:post, "http://example.com/users")
+            stub = stub_request(:post, "https://example.com/users")
                    .to_return(status: 204)
 
             response = dummy_client_class.new.post("/users")
@@ -410,7 +410,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestError" do
         context "when timeout" do
           it "raise TimeoutError" do
-            stub = stub_request(:post, "http://example.com/users")
+            stub = stub_request(:post, "https://example.com/users")
                    .to_raise(Faraday::TimeoutError)
 
             expect { dummy_client_class.new.post("/users") }
@@ -421,7 +421,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "when unexpected request error" do
           it "raise UnexpectedError" do
-            stub = stub_request(:post, "http://example.com/users")
+            stub = stub_request(:post, "https://example.com/users")
                    .to_raise
 
             expect { dummy_client_class.new.post("/users") }
@@ -435,7 +435,7 @@ RSpec.describe Ueki::HttpClient do
         describe "ResponseBody" do
           context "with ResponseBody" do
             it "raise exception object with parsed response" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 400, body: { message: "Bad Request" }.to_json)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -448,7 +448,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without ResponseBody" do
             it "raise exception object with nil body" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 400)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -463,7 +463,7 @@ RSpec.describe Ueki::HttpClient do
         describe "exception dispatch" do
           context "when 400" do
             it "raise BadRequestError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 400)
 
               expect { dummy_client_class.new.post("/users") }
@@ -474,7 +474,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 401" do
             it "raise UnauthorizedError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 401)
 
               expect { dummy_client_class.new.post("/users") }
@@ -485,7 +485,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 403" do
             it "raise ForbiddenError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 403)
 
               expect { dummy_client_class.new.post("/users") }
@@ -496,7 +496,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 404" do
             it "raise NotFoundError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 404)
 
               expect { dummy_client_class.new.post("/users") }
@@ -507,7 +507,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 408" do
             it "raise RequestTimeoutError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 408)
 
               expect { dummy_client_class.new.post("/users") }
@@ -518,7 +518,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 409" do
             it "raise ConflictError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 409)
 
               expect { dummy_client_class.new.post("/users") }
@@ -529,7 +529,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 422" do
             it "raise UnprocessableEntityError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 422)
 
               expect { dummy_client_class.new.post("/users") }
@@ -540,7 +540,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 429" do
             it "raise TooManyRequestsError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 429)
 
               expect { dummy_client_class.new.post("/users") }
@@ -551,7 +551,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 500" do
             it "raise ServerError" do
-              stub = stub_request(:post, "http://example.com/users")
+              stub = stub_request(:post, "https://example.com/users")
                      .to_return(status: 500)
 
               expect { dummy_client_class.new.post("/users") }
@@ -566,7 +566,7 @@ RSpec.describe Ueki::HttpClient do
     describe "#put" do
       describe "RequestParameter" do
         it "reflected in the request body" do
-          stub = stub_request(:put, "http://example.com/users")
+          stub = stub_request(:put, "https://example.com/users")
                  .with(body: { name: "tarou" })
                  .to_return(status: 200)
 
@@ -578,7 +578,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestHeader" do
         describe "User-Agent" do
           it "Class name to be set (default)" do
-            stub = stub_request(:put, "http://example.com/users")
+            stub = stub_request(:put, "https://example.com/users")
                    .with(headers: { "User-Agent" => "DummyClient" })
 
             dummy_client_class.new.put("/users")
@@ -589,7 +589,7 @@ RSpec.describe Ueki::HttpClient do
         describe "Content-Type" do
           context "with RequestBody" do
             it "application/json to be set (default)" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
 
               dummy_client_class.new.put("/users", params: { name: "tarou" })
@@ -599,7 +599,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without RequestBody" do
             it "application/json not to be set (default)" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .with(headers: { "User-Agent" => "DummyClient" })
 
               dummy_client_class.new.put("/users")
@@ -612,7 +612,7 @@ RSpec.describe Ueki::HttpClient do
       describe "ResponseBody" do
         context "with ResponseBody" do
           it "parsed ResponseBody to be returned" do
-            stub = stub_request(:put, "http://example.com/users")
+            stub = stub_request(:put, "https://example.com/users")
                    .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
 
             response = dummy_client_class.new.put("/users")
@@ -623,7 +623,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "without ResponseBody" do
           it "nil to be returned" do
-            stub = stub_request(:put, "http://example.com/users")
+            stub = stub_request(:put, "https://example.com/users")
                    .to_return(status: 204)
 
             response = dummy_client_class.new.put("/users")
@@ -636,7 +636,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestError" do
         context "when timeout" do
           it "raise TimeoutError" do
-            stub = stub_request(:put, "http://example.com/users")
+            stub = stub_request(:put, "https://example.com/users")
                    .to_raise(Faraday::TimeoutError)
 
             expect { dummy_client_class.new.put("/users") }
@@ -647,7 +647,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "when unexpected request error" do
           it "raise UnexpectedError" do
-            stub = stub_request(:put, "http://example.com/users")
+            stub = stub_request(:put, "https://example.com/users")
                    .to_raise
 
             expect { dummy_client_class.new.put("/users") }
@@ -661,7 +661,7 @@ RSpec.describe Ueki::HttpClient do
         describe "ResponseBody" do
           context "with ResponseBody" do
             it "raise exception object with parsed response" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 400, body: { message: "Bad Request" }.to_json)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -674,7 +674,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without ResponseBody" do
             it "raise exception object with nil body" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 400)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -689,7 +689,7 @@ RSpec.describe Ueki::HttpClient do
         describe "exception dispatch" do
           context "when 400" do
             it "raise BadRequestError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 400)
 
               expect { dummy_client_class.new.put("/users") }
@@ -700,7 +700,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 401" do
             it "raise UnauthorizedError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 401)
 
               expect { dummy_client_class.new.put("/users") }
@@ -711,7 +711,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 403" do
             it "raise ForbiddenError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 403)
 
               expect { dummy_client_class.new.put("/users") }
@@ -722,7 +722,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 404" do
             it "raise NotFoundError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 404)
 
               expect { dummy_client_class.new.put("/users") }
@@ -733,7 +733,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 408" do
             it "raise RequestTimeoutError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 408)
 
               expect { dummy_client_class.new.put("/users") }
@@ -744,7 +744,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 409" do
             it "raise ConflictError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 409)
 
               expect { dummy_client_class.new.put("/users") }
@@ -755,7 +755,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 422" do
             it "raise UnprocessableEntityError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 422)
 
               expect { dummy_client_class.new.put("/users") }
@@ -766,7 +766,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 429" do
             it "raise TooManyRequestsError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 429)
 
               expect { dummy_client_class.new.put("/users") }
@@ -777,7 +777,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 500" do
             it "raise ServerError" do
-              stub = stub_request(:put, "http://example.com/users")
+              stub = stub_request(:put, "https://example.com/users")
                      .to_return(status: 500)
 
               expect { dummy_client_class.new.put("/users") }
@@ -792,7 +792,7 @@ RSpec.describe Ueki::HttpClient do
     describe "#patch" do
       describe "RequestParameter" do
         it "reflected in the request body" do
-          stub = stub_request(:patch, "http://example.com/users")
+          stub = stub_request(:patch, "https://example.com/users")
                  .with(body: { name: "tarou" })
                  .to_return(status: 200)
 
@@ -804,7 +804,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestHeader" do
         describe "User-Agent" do
           it "Class name to be set (default)" do
-            stub = stub_request(:patch, "http://example.com/users")
+            stub = stub_request(:patch, "https://example.com/users")
                    .with(headers: { "User-Agent" => "DummyClient" })
 
             dummy_client_class.new.patch("/users")
@@ -815,7 +815,7 @@ RSpec.describe Ueki::HttpClient do
         describe "Content-Type" do
           context "with RequestBody" do
             it "application/json to be set (default)" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
 
               dummy_client_class.new.patch("/users", params: { name: "tarou" })
@@ -825,7 +825,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without RequestBody" do
             it "application/json not to be set (default)" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .with(headers: { "User-Agent" => "DummyClient" })
 
               dummy_client_class.new.patch("/users")
@@ -838,7 +838,7 @@ RSpec.describe Ueki::HttpClient do
       describe "ResponseBody" do
         context "with ResponseBody" do
           it "parsed ResponseBody to be returned" do
-            stub = stub_request(:patch, "http://example.com/users")
+            stub = stub_request(:patch, "https://example.com/users")
                    .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
 
             response = dummy_client_class.new.patch("/users")
@@ -849,7 +849,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "without ResponseBody" do
           it "nil to be returned" do
-            stub = stub_request(:patch, "http://example.com/users")
+            stub = stub_request(:patch, "https://example.com/users")
                    .to_return(status: 204)
 
             response = dummy_client_class.new.patch("/users")
@@ -862,7 +862,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestError" do
         context "when timeout" do
           it "raise TimeoutError" do
-            stub = stub_request(:patch, "http://example.com/users")
+            stub = stub_request(:patch, "https://example.com/users")
                    .to_raise(Faraday::TimeoutError)
 
             expect { dummy_client_class.new.patch("/users") }
@@ -873,7 +873,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "when unexpected request error" do
           it "raise UnexpectedError" do
-            stub = stub_request(:patch, "http://example.com/users")
+            stub = stub_request(:patch, "https://example.com/users")
                    .to_raise
 
             expect { dummy_client_class.new.patch("/users") }
@@ -887,7 +887,7 @@ RSpec.describe Ueki::HttpClient do
         describe "ResponseBody" do
           context "with ResponseBody" do
             it "raise exception object with parsed response" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 400, body: { message: "Bad Request" }.to_json)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -900,7 +900,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without ResponseBody" do
             it "raise exception object with nil body" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 400)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -915,7 +915,7 @@ RSpec.describe Ueki::HttpClient do
         describe "exception dispatch" do
           context "when 400" do
             it "raise BadRequestError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 400)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -926,7 +926,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 401" do
             it "raise UnauthorizedError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 401)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -937,7 +937,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 403" do
             it "raise ForbiddenError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 403)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -948,7 +948,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 404" do
             it "raise NotFoundError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 404)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -959,7 +959,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 408" do
             it "raise RequestTimeoutError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 408)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -970,7 +970,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 409" do
             it "raise ConflictError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 409)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -981,7 +981,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 422" do
             it "raise UnprocessableEntityError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 422)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -992,7 +992,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 429" do
             it "raise TooManyRequestsError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 429)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -1003,7 +1003,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 500" do
             it "raise ServerError" do
-              stub = stub_request(:patch, "http://example.com/users")
+              stub = stub_request(:patch, "https://example.com/users")
                      .to_return(status: 500)
 
               expect { dummy_client_class.new.patch("/users") }
@@ -1018,7 +1018,7 @@ RSpec.describe Ueki::HttpClient do
     describe "#delete" do
       describe "RequestParameter" do
         it "reflected in the query string" do
-          stub = stub_request(:delete, "http://example.com/users")
+          stub = stub_request(:delete, "https://example.com/users")
                  .with(query: { page: 10, per: 1 })
                  .to_return(status: 200)
 
@@ -1030,7 +1030,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestHeader" do
         describe "User-Agent" do
           it "Class name to be set (default)" do
-            stub = stub_request(:delete, "http://example.com/users")
+            stub = stub_request(:delete, "https://example.com/users")
                    .with(headers: { "User-Agent" => "DummyClient" })
 
             dummy_client_class.new.delete("/users")
@@ -1042,7 +1042,7 @@ RSpec.describe Ueki::HttpClient do
       describe "ResponseBody" do
         context "with ResponseBody" do
           it "parsed ResponseBody to be returned" do
-            stub = stub_request(:delete, "http://example.com/users")
+            stub = stub_request(:delete, "https://example.com/users")
                    .to_return(status: 200, body: { users: [{ id: 1, name: "tarou" }] }.to_json)
 
             response = dummy_client_class.new.delete("/users")
@@ -1053,7 +1053,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "without ResponseBody" do
           it "nil to be returned" do
-            stub = stub_request(:delete, "http://example.com/users")
+            stub = stub_request(:delete, "https://example.com/users")
                    .to_return(status: 204)
 
             response = dummy_client_class.new.delete("/users")
@@ -1066,7 +1066,7 @@ RSpec.describe Ueki::HttpClient do
       describe "RequestError" do
         context "when timeout" do
           it "raise TimeoutError" do
-            stub = stub_request(:delete, "http://example.com/users")
+            stub = stub_request(:delete, "https://example.com/users")
                    .to_raise(Faraday::TimeoutError)
 
             expect { dummy_client_class.new.delete("/users") }
@@ -1077,7 +1077,7 @@ RSpec.describe Ueki::HttpClient do
 
         context "when unexpected request error" do
           it "raise UnexpectedError" do
-            stub = stub_request(:delete, "http://example.com/users")
+            stub = stub_request(:delete, "https://example.com/users")
                    .to_raise
 
             expect { dummy_client_class.new.delete("/users") }
@@ -1091,7 +1091,7 @@ RSpec.describe Ueki::HttpClient do
         describe "ResponseBody" do
           context "with ResponseBody" do
             it "raise exception object with parsed response" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 400, body: { message: "Bad Request" }.to_json)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -1104,7 +1104,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "without ResponseBody" do
             it "raise exception object with nil body" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 400)
 
               expected_exception = an_instance_of(dummy_client_class::BadRequestError)
@@ -1119,7 +1119,7 @@ RSpec.describe Ueki::HttpClient do
         describe "exception dispatch" do
           context "when 400" do
             it "raise BadRequestError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 400)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1130,7 +1130,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 401" do
             it "raise UnauthorizedError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 401)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1141,7 +1141,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 403" do
             it "raise ForbiddenError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 403)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1152,7 +1152,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 404" do
             it "raise NotFoundError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 404)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1163,7 +1163,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 408" do
             it "raise RequestTimeoutError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 408)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1174,7 +1174,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 409" do
             it "raise ConflictError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 409)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1185,7 +1185,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 422" do
             it "raise UnprocessableEntityError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 422)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1196,7 +1196,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 429" do
             it "raise TooManyRequestsError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 429)
 
               expect { dummy_client_class.new.delete("/users") }
@@ -1207,7 +1207,7 @@ RSpec.describe Ueki::HttpClient do
 
           context "when 500" do
             it "raise ServerError" do
-              stub = stub_request(:delete, "http://example.com/users")
+              stub = stub_request(:delete, "https://example.com/users")
                      .to_return(status: 500)
 
               expect { dummy_client_class.new.delete("/users") }
