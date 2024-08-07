@@ -13,7 +13,7 @@ module Ueki
 
         case content_type
         when "application/json"
-          params&.to_json
+          params.to_json
         when "application/x-www-form-urlencoded"
           URI.encode_www_form(params)
         else
