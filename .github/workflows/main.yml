@@ -27,7 +27,7 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-      continue-on-error: ${{ (matrix.ruby_version == 'ruby-head')}}
+      continue-on-error: ${{ (matrix.ruby == 'ruby-head')}}
     - name: Run the default task
       run: bundle exec rake
-      continue-on-error: ${{ (matrix.ruby_version == 'ruby-head')}}
+      continue-on-error: ${{ (matrix.ruby == 'ruby-head')}}
