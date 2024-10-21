@@ -362,12 +362,34 @@ RSpec.describe Ueki::HttpClient do
 
         describe "Content-Type" do
           context "with RequestBody" do
-            it "application/json to be set (default)" do
-              stub = stub_request(:post, "https://example.com/users")
-                     .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
+            context "when 'Content-Type' unspecified" do
+              it "application/json to be set (default)" do
+                stub = stub_request(:post, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
 
-              dummy_client_class.new.post("/users", params: { name: "tarou" })
-              expect(stub).to have_been_requested
+                dummy_client_class.new.post("/users", params: { name: "tarou" })
+                expect(stub).to have_been_requested
+              end
+            end
+
+            context "when 'Content-Type (string key)' specified" do
+              it "specified 'Content-Type' to be set" do
+                stub = stub_request(:post, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/x-www-form-urlencoded" })
+
+                dummy_client_class.new.post("/users", params: { name: "tarou" }, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+                expect(stub).to have_been_requested
+              end
+            end
+
+            context "when 'Content-Type (symbol key)' specified" do
+              it "specified 'Content-Type' to be set" do
+                stub = stub_request(:post, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/x-www-form-urlencoded" })
+
+                dummy_client_class.new.post("/users", params: { name: "tarou" }, headers: { "Content-Type": "application/x-www-form-urlencoded" })
+                expect(stub).to have_been_requested
+              end
             end
           end
 
@@ -588,12 +610,34 @@ RSpec.describe Ueki::HttpClient do
 
         describe "Content-Type" do
           context "with RequestBody" do
-            it "application/json to be set (default)" do
-              stub = stub_request(:put, "https://example.com/users")
-                     .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
+            context "when 'Content-Type' unspecified" do
+              it "application/json to be set (default)" do
+                stub = stub_request(:put, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
 
-              dummy_client_class.new.put("/users", params: { name: "tarou" })
-              expect(stub).to have_been_requested
+                dummy_client_class.new.put("/users", params: { name: "tarou" })
+                expect(stub).to have_been_requested
+              end
+            end
+
+            context "when 'Content-Type (string key)' specified" do
+              it "specified 'Content-Type' to be set" do
+                stub = stub_request(:put, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/x-www-form-urlencoded" })
+
+                dummy_client_class.new.put("/users", params: { name: "tarou" }, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+                expect(stub).to have_been_requested
+              end
+            end
+
+            context "when 'Content-Type (symbol key)' specified" do
+              it "specified 'Content-Type' to be set" do
+                stub = stub_request(:put, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/x-www-form-urlencoded" })
+
+                dummy_client_class.new.put("/users", params: { name: "tarou" }, headers: { "Content-Type": "application/x-www-form-urlencoded" })
+                expect(stub).to have_been_requested
+              end
             end
           end
 
@@ -814,12 +858,34 @@ RSpec.describe Ueki::HttpClient do
 
         describe "Content-Type" do
           context "with RequestBody" do
-            it "application/json to be set (default)" do
-              stub = stub_request(:patch, "https://example.com/users")
-                     .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
+            context "when 'Content-Type' unspecified" do
+              it "application/json to be set (default)" do
+                stub = stub_request(:patch, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/json" })
 
-              dummy_client_class.new.patch("/users", params: { name: "tarou" })
-              expect(stub).to have_been_requested
+                dummy_client_class.new.patch("/users", params: { name: "tarou" })
+                expect(stub).to have_been_requested
+              end
+            end
+
+            context "when 'Content-Type (string key)' specified" do
+              it "specified 'Content-Type' to be set" do
+                stub = stub_request(:patch, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/x-www-form-urlencoded" })
+
+                dummy_client_class.new.patch("/users", params: { name: "tarou" }, headers: { "Content-Type" => "application/x-www-form-urlencoded" })
+                expect(stub).to have_been_requested
+              end
+            end
+
+            context "when 'Content-Type (symbol key)' specified" do
+              it "specified 'Content-Type' to be set" do
+                stub = stub_request(:patch, "https://example.com/users")
+                       .with(headers: { "User-Agent" => "DummyClient", "Content-Type" => "application/x-www-form-urlencoded" })
+
+                dummy_client_class.new.patch("/users", params: { name: "tarou" }, headers: { "Content-Type": "application/x-www-form-urlencoded" })
+                expect(stub).to have_been_requested
+              end
             end
           end
 

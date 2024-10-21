@@ -8,7 +8,8 @@ module Ueki
     # You can also use your own Requester class with the same I/F.
     module DefaultRequester
       UNSPECIFIED = Object.new.freeze
-      private_constant :UNSPECIFIED
+      CONTENT_TYPE_HEADER_KEY = "Content-Type"
+      private_constant :UNSPECIFIED, :CONTENT_TYPE_HEADER_KEY
 
       def get(path, params: nil, headers: {}, request_options: {}, response_body_parser: UNSPECIFIED)
         response_body_parser = default_response_body_parser_if_unspecifiied(response_body_parser)
@@ -18,27 +19,30 @@ module Ueki
       def post(path, params: nil, headers: {}, request_options: {}, request_body_converter: UNSPECIFIED, response_body_parser: UNSPECIFIED)
         response_body_parser = default_response_body_parser_if_unspecifiied(response_body_parser)
         request_body_converter = default_request_body_converter_if_unspecified(request_body_converter)
+        headers = headers.transform_keys(&:to_s)
 
-        headers[:"Content-Type"] ||= "application/json" unless params.nil?
-        params = request_body_converter.call(content_type: headers[:"Content-Type"], params:)
+        headers[CONTENT_TYPE_HEADER_KEY] ||= "application/json" unless params.nil?
+        params = request_body_converter.call(content_type: headers[CONTENT_TYPE_HEADER_KEY], params:)
         request(:post, path:, params:, headers:, request_options:, response_body_parser:)
       end
 
       def put(path, params: nil, headers: {}, request_options: {}, request_body_converter: UNSPECIFIED, response_body_parser: UNSPECIFIED)
         response_body_parser = default_response_body_parser_if_unspecifiied(response_body_parser)
         request_body_converter = default_request_body_converter_if_unspecified(request_body_converter)
+        headers = headers.transform_keys(&:to_s)
 
-        headers[:"Content-Type"] ||= "application/json" unless params.nil?
-        params = request_body_converter.call(content_type: headers[:"Content-Type"], params:)
+        headers[CONTENT_TYPE_HEADER_KEY] ||= "application/json" unless params.nil?
+        params = request_body_converter.call(content_type: headers[CONTENT_TYPE_HEADER_KEY], params:)
         request(:put, path:, params:, headers:, request_options:, response_body_parser:)
       end
 
       def patch(path, params: nil, headers: {}, request_options: {}, request_body_converter: UNSPECIFIED, response_body_parser: UNSPECIFIED)
         response_body_parser = default_response_body_parser_if_unspecifiied(response_body_parser)
         request_body_converter = default_request_body_converter_if_unspecified(request_body_converter)
+        headers = headers.transform_keys(&:to_s)
 
-        headers[:"Content-Type"] ||= "application/json" unless params.nil?
-        params = request_body_converter.call(content_type: headers[:"Content-Type"], params:)
+        headers[CONTENT_TYPE_HEADER_KEY] ||= "application/json" unless params.nil?
+        params = request_body_converter.call(content_type: headers[CONTENT_TYPE_HEADER_KEY], params:)
         request(:patch, path:, params:, headers:, request_options:, response_body_parser:)
       end
 
